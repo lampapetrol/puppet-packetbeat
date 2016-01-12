@@ -12,8 +12,8 @@ define packetbeat::protocol (
     $conf = deep_merge($defaults[$name], $config)
 
     concat::fragment { "protocol_$name":
-        target => $packetbeat::params::configfile,
-        order => 11,
+        target => $packetbeat::configfile,
+        order => 21,
         content => template('packetbeat/config/21_protocol.erb'),
     }
 

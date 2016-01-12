@@ -5,7 +5,7 @@ class packetbeat::service (
   
   service { 'packetbeat':
     enable => true,
-    ensure => $ensure
+    ensure => 'running'
   }
   
 }

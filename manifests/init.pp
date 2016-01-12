@@ -43,16 +43,26 @@
 # Copyright 2016 Your name here, unless otherwise noted.
 #
 class packetbeat (
-  $ensure = $packetbeat::params::ensure,
-  $status = $packetbeat::params::status,
-  $manage_repo = false,
-  $config = {}
+    $ensure = $packetbeat::params::ensure,
+    $status = $packetbeat::params::status,
+    $manage_repo = false,
+    $configfile = $packetbeat::params::configfile,
+    $sniffer = {},
+    $output = {},
+    $shipper = {},
+    $logging = {}
 ) inherits packetbeat::params {
 
-  if ($manage_repo == true) {
-    include packetbeat::repo
-  }
-  include packetbeat::package
-  include packetbeat::config
-  
+    ### Validate input ###
+
+    # output
+    validate_hash($output)
+
+    ###
+    if ($manage_repo == true) {
+        include packetbeat::repo
+    }
+    include packetbeat::package
+    include packetbeat::config
+    include packetbeat::service
 }

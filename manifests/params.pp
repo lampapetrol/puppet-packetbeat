@@ -10,162 +10,120 @@
 # This class is not intended to be used directly.
 class packetbeat::params {
 
-  $configfile = '/etc/packetbeat/fragment.yml'
+    $configfile = '/etc/packetbeat/packetbeat.yml'
 
-  $ensure = 'present'
+    $ensure = 'present'
 
-  $status = 'enabled'
+    $status = 'enabled'
 
-  $config_defaults = {
-    interfaces => {
-      device => 'any',
-      snaplen => 1514,
-      type => 'pcap',
-      buffer_size_mb => 30
-    },
-    procs => {
-      mysql => {
-        process => 'mysqld'
-      }
-    },
-    protocols => {
-      dns => {
-        ports => [53],
-        include_authorities => false,
-        include_additionals => false,
-        send_request => false,
-        send_response => false,
-      },
-      http => {
-        ports => [80,8080,8000,5000,8002],
-        hide_keywords => [],
-      },
-      memcache => {
-        ports => [11211],
-        parseunknown => false,
-        maxvalues => 0,
-        maxbytespervalue => 'unlimited',
-        udptransactiontimeout => 200
-      },
-      mysql => {
-        ports => [3306]
-      },
-      pgsql => {
-        ports => [5432]
-      },
-      redis => {
-        ports => [6379]
-      },
-      thrift => {
-        ports => [9090]
-      },
-      mongodb => {
-        ports => [27017]
-      }
-    },
-    shipper => {
-      name => '',
-      tags => [],
-      ignore_outgoing => false,
-      refresh_topology_freq => 10,
-      topology_expire => 15,
-      geoip => {
-        enabled => false,
-        paths => []
-      }
-    },
-    output => {
-      elasticsearch => {
-        enabled => false
-      },
-      logstash => {
-        enabled => false,
-        hosts => ['localhost:5044'],
-        worker => 1,
-        loadbalance => false,
-        index => 'packetbeat',
-        tls => {
-          enabled => false,
-          certificate_authorities => [],
-          certificate => '',
-          certificate_key => '',
-          insecure => false,
-          cipher_suites => [],
-          curve_types => []
-        }
-      },
-      file => {
-        enabled => false
-      },
-      console => {
-        enabled => false,
-        pretty => false
-      }
-    },
-    shipper => {
-      name => '',
-      tags => [],
-      ignore_outgoing => false,
-      refresh_topology_freq => 10,
-      topology_expire => 15,
-      geoip => {
-        enabled => false,
-        paths => []
-      }
-    },
-    logging => {
-      level => 'error'
+    $device = 'any'
+
+    $sniffer = {
+        device => 'any',
+        snaplen => 1514,
+        type => 'pcap',
+        buffer_size_mb => 30
     }
-  }
 
     $protocols = {
         dns => {
             ports => [53],
-            include_authorities => false,
-            include_additionals => false,
             send_request => false,
             send_response => false,
+            include_authorities => false,
+            include_additionals => false,
         },
         http => {
             ports => [80,8080,8000,5000,8002],
+            send_request => false,
+            send_response => false,
             hide_keywords => [],
+            send_headers => [],
         },
         memcache => {
             ports => [11211],
+            send_request => false,
+            send_response => false,
             parseunknown => false,
             maxvalues => 0,
             maxbytespervalue => 'unlimited',
-            udptransactiontimeout => 200
+            udptransactiontimeout => 200,
         },
         mysql => {
-            ports => [3306]
+            ports => [3306],
+            send_request => false,
+            send_response => false,
         },
         pgsql => {
-            ports => [5432]
+            ports => [5432],
+            send_request => false,
+            send_response => false,
         },
         redis => {
-            ports => [6379]
+            ports => [6379],
+            send_request => false,
+            send_response => false,
         },
         thrift => {
-            ports => [9090]
+            ports => [9090],
+            send_request => false,
+            send_response => false,
         },
         mongodb => {
-            ports => [27017]
+            ports => [27017],
+            send_request => false,
+            send_response => false,
         }
     }
 
-  $procs = {
-    mysqld => {
-      process => 'mysqld',
-      cmdline_grep => 'mysqld'
-    },
-    pgsql => {
-      process => 'pgsql',
-      cmdline_grep => 'postgres'
-    },
-    nginx => {
-      process => 'nginx',
-      cmdline_grep => 'nginx'
+    $procs = {
+        mysqld => 'mysqld',
+        pgsql => 'postgres',
+        nginx => 'nginx'
     }
-  }
+
+    $output = {
+        elasticsearch => {
+            enabled => false
+        },
+        logstash => {
+            enabled => false,
+            hosts => [],
+            worker => 1,
+            loadbalance => false,
+            port => 10200,
+            index => 'packetbeat',
+            tls => {},
+            timeout => 30,
+            max_retries => 3
+        },
+        file => {
+            enabled => false,
+            path => '/tmp/packetbeat',
+            filename => 'packetbeat',
+            rotate_every_kb => 10000,
+            number_of_files => 7
+        }
+    }
+
+    $shipper = {
+        name => $fqdn,
+        tags => [],
+        ignore_outgoing => false,
+        refresh_topology_freq => 10,
+        topology_expire => 15,
+    }
+
+    $logging = {
+        to_syslog => true,
+        to_files => false,
+        files => {
+            path => '/var/log/mybeat',
+            name => 'mybeat',
+            rotateeverybytes => 10485760,
+            keepfiles => 7
+        },
+        selectors => [],
+        level => 'error'
+    }
 }
