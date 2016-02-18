@@ -19,10 +19,7 @@ class packetbeat::params {
     $device = 'any'
 
     $sniffer = {
-        device => 'any',
-        snaplen => 1514,
-        type => 'pcap',
-        buffer_size_mb => 30
+        device => 'any'
     }
 
     $protocols = {

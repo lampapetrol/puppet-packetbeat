@@ -16,9 +16,9 @@ define packetbeat::proc (
         $grep = $cmdline_grep
     }
 
-    concat::fragment { "procs_$name":
-        target => $packetbeat::configfile,
-        order => 31,
+    concat::fragment { "procs_${name}":
+        target  => $packetbeat::configfile,
+        order   => 31,
         content => template('packetbeat/config/31_proc.erb'),
     }
 }
