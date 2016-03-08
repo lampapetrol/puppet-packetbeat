@@ -1,6 +1,6 @@
 #
 class packetbeat::package (
-  $ensure = $packatbeat::ensure
+  $ensure = $packetbeat::ensure
 ) {
 
   package { 'packetbeat':
